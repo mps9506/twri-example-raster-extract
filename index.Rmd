@@ -1,8 +1,8 @@
 ---
-title: "Template"
+title: "Extract and Summarize NLCD, or Other, Data with Polygons"
 author: "Michael Schramm"
 date: "`r Sys.Date()`"
-github-repo: mps9506/twri-bookdown-template
+github-repo: mps9506/twri-example-raster-extract
 bibliography: bibliography.bib
 biblio-style: "apalike"
 link-citations: true
@@ -28,13 +28,176 @@ update_geom_font_defaults(font_rc)
 ```
 
 
-# Chapter 1 {-}
+# Introduction {-}
 
-blah blah [@rcore].
+This will walk you through summarizing the area of different raster classes within one or more polygon features using R. This would be similar to using the Tabulate Area tool in ArcGIS. 
 
-## Subheading
+Specifically for this example we are going to calculate National Land Cover Dataset (NLCD) class areas in four Texas counties.
+
+## Required Libraries {-}
+
+```{r loadpackages}
+library(hrbrthemes) #maybe not required, I use it to pretty my plots
+library(FedData) #handy dandy NLCD downloader
+library(sf) #main spatial vector package for R
+library(raster) #main raster analysis package for R
+library(tidyverse) #all the things
+library(units) #handles unit conversions
+library(ggforce) #plays nice with units
+```
+
+Something to note when you load up the `tidyverse` and `raster` packages. Both packages have functions called `select` and `extract`. The message above notes that those functions from raster have been masked. To be explicit about which function is being called, the syntax is `package::function`. So for example if I want to use the `extract` function from the `raster` package the syntax is `raster::extract()` to ensure the `dplyr` specific `extract` function is not called.
+
+Second, when playing with spatial data in R, you should always explicitly set the coordinate system or projection system. ArcGIS handles on the fly projections that are pretty forgiving when adding data to maps or geoprocessing. However, in R you will generally want all your data in the same projection.
+
+# Load Data {-}
+
+We are going to download county geospatial files using data published by TxDOT on their ArcGIS servers [@txdot]. Then filter it down to a few counties of interest. We are also going to download the NLCD of the area of interest from federal data repos [@bocinsky; @yang2018new]. Figures \@ref(fig:countymap) and \@ref(fig:nlcdextent) but two different reference systems.
+
+```{r download, message=FALSE}
+
+## download counties 
+counties <- read_sf("https://opendata.arcgis.com/datasets/8b902883539a416780440ef009b3f80f_0.geojson")
+
+## reduce to 4 counties I am interested in
+counties <- counties %>%
+  filter(CNTY_NM %in% c("Matagorda", "Wharton", "Jackson", "Lavaca"))
+
+## download nlcd data using
+## extent of the counties layer
+NLCD <- get_nlcd(
+  template = counties,
+  year = 2016,
+  dataset = "Land_Cover",
+  label = "txnlcd",
+  force.redo = TRUE
+)
+```
+
+```{r countymap}
+ggplot() +
+  geom_sf(data = counties) +
+  theme_ipsum_pub(axis_title_just = "c",
+                  plot_margin = margin(10, 10, 10, 10),
+                  ticks = TRUE) +
+  theme(panel.border = element_rect(color = "black",
+                                    fill = NA,
+                                    size = .25)) 
+```
 
 
-# Chapter 2 {-}
+```{r nlcdextent}
+plot(NLCD)
+```
+
+# Extract Data {-}
+
+The `raster::extract()` function will extract the cells by class and feature and return a data.frame with an ID column corresponding to the feature (county in order of the county dataframe) and the land use class and a record for every cell in the feature. This takes about 6 minutes to run on my system. There is a newer package replacing `raster` called `terra` which should do this much faster. However, since it is still very much in development I am didn't include it here. Also note that the `extract` function will transform the counties feature to the CRS of the raster before calculating. 
+
+```{r rasextract, message=FALSE}
+ras_ext <- raster::extract(NLCD, counties,  df = TRUE, factors = TRUE)
+head(ras_ext)
+```
+
+Now we need to do some quick calculation. The data.frame returned by extract only provides the classification values so we need to create a legend dataframe to translate this for us.
+
+```{r legend}
+legend <- tibble(class = c("Open Water",
+                           "Perennial Ice/Snow",
+                           "Developed, Open Space",
+                           "Developed, Low Intensity",
+                           "Developed, Medium Intensity",
+                           "Developed, High Intensity",
+                           "Barren Land",
+                           "Deciduous Forest",
+                           "Evergreen Forest",
+                           "Mixed Forest",
+                           "Dwarf Scrub",
+                           "Shrub/Scrub",
+                           "Grassland/Herbaceous",
+                           "Sedge/Herbaceous",
+                           "Lichens",
+                           "Moss",
+                           "Pasture/Hay",
+                           "Cultivated Crops",
+                           "Woody Wetlands",
+                           "Emergent Herbaceous Wetlands"),
+                 value = c(11, 12, 21, 22, 23, 24, 31, 41, 42, 43, 51, 52, 71, 72, 73, 74, 81, 82, 90, 95))
+
+```
+
+
+Now we can calulcate the percentage land cover class in each county:
+
+```{r nlcdpercent, message=FALSE, out.width="100%"}
+## calculate percentages
+nlcd_summary <- ras_ext %>%
+  group_by(ID, txnlcd_NLCD_2016_Land_Cover_L48_nlcd) %>%
+  summarize(land_cover = n()) %>%
+  left_join(legend, by = c("txnlcd_NLCD_2016_Land_Cover_L48_nlcd" = "value")) %>%
+  ungroup() %>%
+  select(ID, class, land_cover) %>%
+  pivot_wider(names_from = class,
+              values_from = land_cover) %>%
+  mutate(Total = select(., `Open Water`:`Emergent Herbaceous Wetlands`) %>%
+           apply(1, sum, na.rm = TRUE)) %>%
+  pivot_longer(cols = `Open Water`:`Emergent Herbaceous Wetlands`,
+               names_to = "class",
+               values_to = "land_cover") %>%
+  mutate(Percent = land_cover/Total * 100)
+
+## create a plot
+ggplot(nlcd_summary) +
+  geom_col(aes(class, Percent)) +
+  coord_flip() +
+  facet_wrap(~ID) +
+  theme_ipsum_pub(axis_title_just = "c",
+                  plot_margin = margin(10, 10, 10, 10),
+                  ticks = TRUE) +
+  theme(panel.border = element_rect(color = "black",
+                                    fill = NA,
+                                    size = .25))
+
+```
+
+Now we have the percentage area of each class by county (although 1 through 4 isn't informative). Next, calculate the area of the counties and join the county acreage to the nlcd summary table. From there, a little math to calculate the land cover acreage. Area will be calculated using a projected coordinate system, specifically Texas Centric Albers Equal Area, or epsg:6580.
+
+```{r nlcdacres, message=TRUE, out.width="100%"}
+
+counties <- counties %>%
+  st_transform(6580)  %>% #project data
+  mutate(area = st_area(.)) %>% ## calculates are in units of m2 (projection units)
+  mutate(acres = units::set_units(area, "acres")) %>% ## the units library can deal with some conversions automatically, these units are "sticky"
+  mutate(ID = 1:4)
+
+## join the county acreage to the nlcd summary
+nlcd_summary %>%
+  left_join(as_tibble(counties) %>% ## as tibble so we remove the "geometry" which isn't needed here
+              dplyr::select(ID, county_acres = acres, county = CNTY_NM)) %>%
+  mutate(land_use_acres = county_acres * (Percent/100)) -> nlcd_summary ## note that county acres is put first so that units stick with the result
+
+
+ggplot(nlcd_summary) +
+  geom_col(aes(class, land_use_acres)) +
+  facet_wrap(~county) +
+  coord_flip() +
+  theme_ipsum_pub(axis_title_just = "c",
+                  plot_margin = margin(10, 10, 10, 10),
+                  ticks = TRUE) +
+  theme(panel.border = element_rect(color = "black",
+                                    fill = NA,
+                                    size = .25))
+
+
+```
+
+```{r}
+nlcd_summary %>%
+  pivot_wider(id = class,
+              names_from = county,
+              values_from = land_use_acres) %>%
+  knitr::kable()
+```
+
 
 # References {-}

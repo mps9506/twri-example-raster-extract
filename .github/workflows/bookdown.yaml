@@ -18,10 +18,13 @@ jobs:
         with:
           crayon.enabled: 'FALSE'
 
-      - name: Install pandoc and pandoc citeproc
+      - name: Install pandoc and pandoc citeproc and spatial libraries
         run: |
           brew install pandoc
           brew install pandoc-citeproc
+          rm '/usr/local/bin/gfortran'
+          brew install pkg-config gdal proj geos
+
 
       - name: Cache Renv packages
         uses: actions/cache@v2
@@ -39,7 +42,7 @@ jobs:
 
       - name: Install packages
         run: |
-          R -e 'install.packages(c("remotes","knitr","ragg","renv","bookdown", "hrbrthemes"))'
+          R -e 'install.packages(c("remotes","knitr","ragg","renv","bookdown","hrbrthemes","FedData","sf","raster","tidyverse","units","ggforce"))'
           R -e 'renv::restore()'
 
       - name: Build site
