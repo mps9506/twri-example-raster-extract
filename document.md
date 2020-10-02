@@ -132,7 +132,7 @@ ggplot() +
                                     size = .25)) 
 ```
 
-<img src="index_files/figure-html/countymap-1.png" width="672" />
+<img src="document_files/figure-html/countymap-1.png" width="672" />
 
 
 
@@ -140,7 +140,7 @@ ggplot() +
 plot(NLCD)
 ```
 
-<img src="index_files/figure-html/nlcdextent-1.png" width="672" /><img src="index_files/figure-html/nlcdextent-2.png" width="672" />
+<img src="document_files/figure-html/nlcdextent-1.png" width="672" /><img src="document_files/figure-html/nlcdextent-2.png" width="672" />
 
 # Extract Data {-}
 
@@ -154,6 +154,17 @@ ras_ext <- raster::extract(NLCD, counties,  df = TRUE, factors = TRUE)
 ```
 ## Warning in .local(x, y, ...): Transforming SpatialPolygons to the CRS of the
 ## Raster
+```
+
+```
+## Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO"): Discarded
+## ellps WGS 84 in CRS definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0
+## +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs
+```
+
+```
+## Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO"): Discarded
+## datum WGS_1984 in CRS definition
 ```
 
 ```r
@@ -231,7 +242,7 @@ ggplot(nlcd_summary) +
                                     size = .25))
 ```
 
-<img src="index_files/figure-html/nlcdpercent-1.png" width="100%" />
+<img src="document_files/figure-html/nlcdpercent-1.png" width="100%" />
 
 Now we have the percentage area of each class by county (although 1 through 4 isn't informative). Next, calculate the area of the counties and join the county acreage to the nlcd summary table. From there, a little math to calculate the land cover acreage. Area will be calculated using a projected coordinate system, specifically Texas Centric Albers Equal Area, or epsg:6580.
 
@@ -267,7 +278,7 @@ ggplot(nlcd_summary) +
                                     size = .25))
 ```
 
-<img src="index_files/figure-html/nlcdacres-1.png" width="100%" />
+<img src="document_files/figure-html/nlcdacres-1.png" width="100%" />
 
 
 ```r
