@@ -156,6 +156,17 @@ ras_ext <- raster::extract(NLCD, counties,  df = TRUE, factors = TRUE)
 ## Raster
 ```
 
+```
+## Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO"): Discarded
+## ellps WGS 84 in CRS definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0
+## +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs
+```
+
+```
+## Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO"): Discarded
+## datum WGS_1984 in CRS definition
+```
+
 ```r
 head(ras_ext)
 ```
