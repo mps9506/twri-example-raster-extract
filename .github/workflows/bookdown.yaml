@@ -42,7 +42,8 @@ jobs:
 
       - name: Install packages
         run: |
-          R -e 'install.packages(c("remotes","knitr","ragg","renv","bookdown","hrbrthemes","FedData","sf","raster","tidyverse","units","ggforce"))'
+          R -e 'install.packages(c("remotes","knitr","ragg","renv","bookdown","hrbrthemes","sf","raster","tidyverse","units","ggforce"))'
+          R -e 'remotes::install_github("ropensci/FedData")'
           R -e 'renv::restore()'
 
       - name: Build site

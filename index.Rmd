@@ -36,9 +36,13 @@ Specifically for this example we are going to calculate National Land Cover Data
 
 ## Required Libraries {-}
 
+```r
+remotes::install_github("ropensci/FedData")
+```
+
 ```{r loadpackages}
 library(hrbrthemes) #maybe not required, I use it to pretty my plots
-library(FedData) #handy dandy NLCD downloader
+library(FedData) #handy dandy NLCD downloader you need the latest development version from github
 library(sf) #main spatial vector package for R
 library(raster) #main raster analysis package for R
 library(tidyverse) #all the things
