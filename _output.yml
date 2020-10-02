@@ -1,5 +1,7 @@
 bookdown::gitbook:
   css: style.css
+  split_by: none
+  number_sections: FALSE
   includes:
     after_body: footer.html
   config:
