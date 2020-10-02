@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Extract and Summarize NLCD, or Other, Data with Polygons</title>
-  <meta name="description" content="References | Extract and Summarize NLCD, or Other, Data with Polygons" />
+  <title>Load Data | Extract and Summarize NLCD, or Other, Data with Polygons</title>
+  <meta name="description" content="Load Data | Extract and Summarize NLCD, or Other, Data with Polygons" />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Extract and Summarize NLCD, or Other, Data with Polygons" />
+  <meta property="og:title" content="Load Data | Extract and Summarize NLCD, or Other, Data with Polygons" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="mps9506/twri-example-raster-extract" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Extract and Summarize NLCD, or Other, Data with Polygons" />
+  <meta name="twitter:title" content="Load Data | Extract and Summarize NLCD, or Other, Data with Polygons" />
   
   
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="extract-data.html"/>
-
+<link rel="prev" href="index.html"/>
+<link rel="next" href="extract-data.html"/>
 <script src="libs/header-attrs-2.4/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -160,19 +160,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
-
-<div id="refs" class="references hanging-indent">
-<div>
+<div id="load-data" class="section level1 unnumbered">
+<h1>Load Data</h1>
+<p>We are going to download county geospatial files using data published by TxDOT on their ArcGIS servers <span class="citation">(TxDOT – TPP – Data Management TPP-GIS@txdot.gov <a href="#ref-txdot" role="doc-biblioref">2019</a>)</span>. Then filter it down to a few counties of interest. We are also going to download the NLCD of the area of interest from federal data repos <span class="citation">(Bocinsky <a href="#ref-bocinsky" role="doc-biblioref">2020</a>; Yang et al. <a href="#ref-yang2018new" role="doc-biblioref">2018</a>)</span>. Figures <a href="#fig:countymap"><strong>??</strong></a> and <a href="#fig:nlcdextent"><strong>??</strong></a> but two different reference systems.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="load-data.html#cb13-1" aria-hidden="true"></a><span class="co">## download counties </span></span>
+<span id="cb13-2"><a href="load-data.html#cb13-2" aria-hidden="true"></a>counties &lt;-<span class="st"> </span><span class="kw">read_sf</span>(<span class="st">&quot;https://opendata.arcgis.com/datasets/8b902883539a416780440ef009b3f80f_0.geojson&quot;</span>)</span>
+<span id="cb13-3"><a href="load-data.html#cb13-3" aria-hidden="true"></a></span>
+<span id="cb13-4"><a href="load-data.html#cb13-4" aria-hidden="true"></a><span class="co">## reduce to 4 counties I am interested in</span></span>
+<span id="cb13-5"><a href="load-data.html#cb13-5" aria-hidden="true"></a>counties &lt;-<span class="st"> </span>counties <span class="op">%&gt;%</span></span>
+<span id="cb13-6"><a href="load-data.html#cb13-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(CNTY_NM <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Matagorda&quot;</span>, <span class="st">&quot;Wharton&quot;</span>, <span class="st">&quot;Jackson&quot;</span>, <span class="st">&quot;Lavaca&quot;</span>))</span>
+<span id="cb13-7"><a href="load-data.html#cb13-7" aria-hidden="true"></a></span>
+<span id="cb13-8"><a href="load-data.html#cb13-8" aria-hidden="true"></a><span class="co">## download nlcd data using</span></span>
+<span id="cb13-9"><a href="load-data.html#cb13-9" aria-hidden="true"></a><span class="co">## extent of the counties layer</span></span>
+<span id="cb13-10"><a href="load-data.html#cb13-10" aria-hidden="true"></a>NLCD &lt;-<span class="st"> </span><span class="kw">get_nlcd</span>(</span>
+<span id="cb13-11"><a href="load-data.html#cb13-11" aria-hidden="true"></a>  <span class="dt">template =</span> counties,</span>
+<span id="cb13-12"><a href="load-data.html#cb13-12" aria-hidden="true"></a>  <span class="dt">year =</span> <span class="dv">2016</span>,</span>
+<span id="cb13-13"><a href="load-data.html#cb13-13" aria-hidden="true"></a>  <span class="dt">dataset =</span> <span class="st">&quot;Land_Cover&quot;</span>,</span>
+<span id="cb13-14"><a href="load-data.html#cb13-14" aria-hidden="true"></a>  <span class="dt">label =</span> <span class="st">&quot;txnlcd&quot;</span>,</span>
+<span id="cb13-15"><a href="load-data.html#cb13-15" aria-hidden="true"></a>  <span class="dt">force.redo =</span> <span class="ot">TRUE</span></span>
+<span id="cb13-16"><a href="load-data.html#cb13-16" aria-hidden="true"></a>)</span></code></pre></div>
+<pre><code>## Warning in showSRID(uprojargs, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;): Discarded
+## ellps WGS 84 in CRS definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0
+## +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs</code></pre>
+<pre><code>## Warning in showSRID(uprojargs, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;): Discarded
+## datum WGS_1984 in CRS definition</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="load-data.html#cb16-1" aria-hidden="true"></a><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb16-2"><a href="load-data.html#cb16-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_sf</span>(<span class="dt">data =</span> counties) <span class="op">+</span></span>
+<span id="cb16-3"><a href="load-data.html#cb16-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">theme_ipsum_pub</span>(<span class="dt">axis_title_just =</span> <span class="st">&quot;c&quot;</span>,</span>
+<span id="cb16-4"><a href="load-data.html#cb16-4" aria-hidden="true"></a>                  <span class="dt">plot_margin =</span> <span class="kw">margin</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>),</span>
+<span id="cb16-5"><a href="load-data.html#cb16-5" aria-hidden="true"></a>                  <span class="dt">ticks =</span> <span class="ot">TRUE</span>) <span class="op">+</span></span>
+<span id="cb16-6"><a href="load-data.html#cb16-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb16-7"><a href="load-data.html#cb16-7" aria-hidden="true"></a>                                    <span class="dt">fill =</span> <span class="ot">NA</span>,</span>
+<span id="cb16-8"><a href="load-data.html#cb16-8" aria-hidden="true"></a>                                    <span class="dt">size =</span> <span class="fl">.25</span>)) </span></code></pre></div>
+<p><img src="index_files/figure-html/countymap-1.png" width="672" /></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="load-data.html#cb17-1" aria-hidden="true"></a><span class="kw">plot</span>(NLCD)</span></code></pre></div>
+<p><img src="index_files/figure-html/nlcdextent-1.png" width="672" /><img src="index_files/figure-html/nlcdextent-2.png" width="672" /></p>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-bocinsky">
 <p>Bocinsky, R. Kyle. 2020. <em>FedData: Functions to Automate Downloading Geospatial Data Available from Several Federated Data Sources</em>. <a href="https://CRAN.R-project.org/package=FedData">https://CRAN.R-project.org/package=FedData</a>.</p>
 </div>
-<div>
+<div id="ref-txdot">
 <p>TxDOT – TPP – Data Management TPP-GIS@txdot.gov. 2019. <em>Texas County Boundaries Detailed</em>. Texas Department of Transportation. <a href="https://services.arcgis.com/KTcxiTD9dsQw4r7Z/arcgis/rest/services/Texas_County_Boundaries_Detailed/FeatureServer">https://services.arcgis.com/KTcxiTD9dsQw4r7Z/arcgis/rest/services/Texas_County_Boundaries_Detailed/FeatureServer</a>.</p>
 </div>
-<div>
+<div id="ref-yang2018new">
 <p>Yang, Limin, Suming Jin, Patrick Danielson, Collin Homer, Leila Gass, Stacie M Bender, Adam Case, et al. 2018. “A New Generation of the United States National Land Cover Database: Requirements, Research Priorities, Design, and Implementation Strategies.” <em>ISPRS Journal of Photogrammetry and Remote Sensing</em> 146: 108–23.</p>
-</div>
 </div>
 </div>
 
@@ -187,8 +220,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="extract-data.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="extract-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

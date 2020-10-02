@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Extract Data | Extract and Summarize NLCD, or Other, Data with Polygons</title>
+  <meta name="description" content="Extract Data | Extract and Summarize NLCD, or Other, Data with Polygons" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Extract Data | Extract and Summarize NLCD, or Other, Data with Polygons" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  <meta name="github-repo" content="mps9506/twri-example-raster-extract" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Extract Data | Extract and Summarize NLCD, or Other, Data with Polygons" />
+  
+  
+  
+
+<meta name="author" content="Michael Schramm" />
+
+
+<meta name="date" content="2020-10-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="load-data.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/header-attrs-2.4/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">TEMPLATE</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#required-libraries"><i class="fa fa-check"></i>Required Libraries</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="load-data.html"><a href="load-data.html"><i class="fa fa-check"></i>Load Data</a></li>
+<li class="chapter" data-level="" data-path="extract-data.html"><a href="extract-data.html"><i class="fa fa-check"></i>Extract Data</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Extract and Summarize NLCD, or Other, Data with Polygons</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="extract-data" class="section level1 unnumbered">
+<h1>Extract Data</h1>
+<p>The <code>raster::extract()</code> function will extract the cells by class and feature and return a data.frame with an ID column corresponding to the feature (county in order of the county dataframe) and the land use class and a record for every cell in the feature. This takes about 6 minutes to run on my system. There is a newer package replacing <code>raster</code> called <code>terra</code> which should do this much faster. However, since it is still very much in development I am didn’t include it here. Also note that the <code>extract</code> function will transform the counties feature to the CRS of the raster before calculating.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="extract-data.html#cb18-1" aria-hidden="true"></a>ras_ext &lt;-<span class="st"> </span>raster<span class="op">::</span><span class="kw">extract</span>(NLCD, counties,  <span class="dt">df =</span> <span class="ot">TRUE</span>, <span class="dt">factors =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## Warning in .local(x, y, ...): Transforming SpatialPolygons to the CRS of the
+## Raster</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="extract-data.html#cb20-1" aria-hidden="true"></a><span class="kw">head</span>(ras_ext)</span></code></pre></div>
+<pre><code>##   ID txnlcd_NLCD_2016_Land_Cover_L48_nlcd
+## 1  1                                   21
+## 2  1                                   21
+## 3  1                                   21
+## 4  1                                   41
+## 5  1                                   41
+## 6  1                                   21</code></pre>
+<p>Now we need to do some quick calculation. The data.frame returned by extract only provides the classification values so we need to create a legend dataframe to translate this for us.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="extract-data.html#cb22-1" aria-hidden="true"></a>legend &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;Open Water&quot;</span>,</span>
+<span id="cb22-2"><a href="extract-data.html#cb22-2" aria-hidden="true"></a>                           <span class="st">&quot;Perennial Ice/Snow&quot;</span>,</span>
+<span id="cb22-3"><a href="extract-data.html#cb22-3" aria-hidden="true"></a>                           <span class="st">&quot;Developed, Open Space&quot;</span>,</span>
+<span id="cb22-4"><a href="extract-data.html#cb22-4" aria-hidden="true"></a>                           <span class="st">&quot;Developed, Low Intensity&quot;</span>,</span>
+<span id="cb22-5"><a href="extract-data.html#cb22-5" aria-hidden="true"></a>                           <span class="st">&quot;Developed, Medium Intensity&quot;</span>,</span>
+<span id="cb22-6"><a href="extract-data.html#cb22-6" aria-hidden="true"></a>                           <span class="st">&quot;Developed, High Intensity&quot;</span>,</span>
+<span id="cb22-7"><a href="extract-data.html#cb22-7" aria-hidden="true"></a>                           <span class="st">&quot;Barren Land&quot;</span>,</span>
+<span id="cb22-8"><a href="extract-data.html#cb22-8" aria-hidden="true"></a>                           <span class="st">&quot;Deciduous Forest&quot;</span>,</span>
+<span id="cb22-9"><a href="extract-data.html#cb22-9" aria-hidden="true"></a>                           <span class="st">&quot;Evergreen Forest&quot;</span>,</span>
+<span id="cb22-10"><a href="extract-data.html#cb22-10" aria-hidden="true"></a>                           <span class="st">&quot;Mixed Forest&quot;</span>,</span>
+<span id="cb22-11"><a href="extract-data.html#cb22-11" aria-hidden="true"></a>                           <span class="st">&quot;Dwarf Scrub&quot;</span>,</span>
+<span id="cb22-12"><a href="extract-data.html#cb22-12" aria-hidden="true"></a>                           <span class="st">&quot;Shrub/Scrub&quot;</span>,</span>
+<span id="cb22-13"><a href="extract-data.html#cb22-13" aria-hidden="true"></a>                           <span class="st">&quot;Grassland/Herbaceous&quot;</span>,</span>
+<span id="cb22-14"><a href="extract-data.html#cb22-14" aria-hidden="true"></a>                           <span class="st">&quot;Sedge/Herbaceous&quot;</span>,</span>
+<span id="cb22-15"><a href="extract-data.html#cb22-15" aria-hidden="true"></a>                           <span class="st">&quot;Lichens&quot;</span>,</span>
+<span id="cb22-16"><a href="extract-data.html#cb22-16" aria-hidden="true"></a>                           <span class="st">&quot;Moss&quot;</span>,</span>
+<span id="cb22-17"><a href="extract-data.html#cb22-17" aria-hidden="true"></a>                           <span class="st">&quot;Pasture/Hay&quot;</span>,</span>
+<span id="cb22-18"><a href="extract-data.html#cb22-18" aria-hidden="true"></a>                           <span class="st">&quot;Cultivated Crops&quot;</span>,</span>
+<span id="cb22-19"><a href="extract-data.html#cb22-19" aria-hidden="true"></a>                           <span class="st">&quot;Woody Wetlands&quot;</span>,</span>
+<span id="cb22-20"><a href="extract-data.html#cb22-20" aria-hidden="true"></a>                           <span class="st">&quot;Emergent Herbaceous Wetlands&quot;</span>),</span>
+<span id="cb22-21"><a href="extract-data.html#cb22-21" aria-hidden="true"></a>                 <span class="dt">value =</span> <span class="kw">c</span>(<span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">23</span>, <span class="dv">24</span>, <span class="dv">31</span>, <span class="dv">41</span>, <span class="dv">42</span>, <span class="dv">43</span>, <span class="dv">51</span>, <span class="dv">52</span>, <span class="dv">71</span>, <span class="dv">72</span>, <span class="dv">73</span>, <span class="dv">74</span>, <span class="dv">81</span>, <span class="dv">82</span>, <span class="dv">90</span>, <span class="dv">95</span>))</span></code></pre></div>
+<p>Now we can calulcate the percentage land cover class in each county:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="extract-data.html#cb23-1" aria-hidden="true"></a><span class="co">## calculate percentages</span></span>
+<span id="cb23-2"><a href="extract-data.html#cb23-2" aria-hidden="true"></a>nlcd_summary &lt;-<span class="st"> </span>ras_ext <span class="op">%&gt;%</span></span>
+<span id="cb23-3"><a href="extract-data.html#cb23-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">group_by</span>(ID, txnlcd_NLCD_<span class="dv">2016</span>_Land_Cover_L48_nlcd) <span class="op">%&gt;%</span></span>
+<span id="cb23-4"><a href="extract-data.html#cb23-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">land_cover =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb23-5"><a href="extract-data.html#cb23-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(legend, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;txnlcd_NLCD_2016_Land_Cover_L48_nlcd&quot;</span> =<span class="st"> &quot;value&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb23-6"><a href="extract-data.html#cb23-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb23-7"><a href="extract-data.html#cb23-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(ID, class, land_cover) <span class="op">%&gt;%</span></span>
+<span id="cb23-8"><a href="extract-data.html#cb23-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> class,</span>
+<span id="cb23-9"><a href="extract-data.html#cb23-9" aria-hidden="true"></a>              <span class="dt">values_from =</span> land_cover) <span class="op">%&gt;%</span></span>
+<span id="cb23-10"><a href="extract-data.html#cb23-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Total =</span> <span class="kw">select</span>(., <span class="st">`</span><span class="dt">Open Water</span><span class="st">`</span><span class="op">:</span><span class="st">`</span><span class="dt">Emergent Herbaceous Wetlands</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
+<span id="cb23-11"><a href="extract-data.html#cb23-11" aria-hidden="true"></a><span class="st">           </span><span class="kw">apply</span>(<span class="dv">1</span>, sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb23-12"><a href="extract-data.html#cb23-12" aria-hidden="true"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="st">`</span><span class="dt">Open Water</span><span class="st">`</span><span class="op">:</span><span class="st">`</span><span class="dt">Emergent Herbaceous Wetlands</span><span class="st">`</span>,</span>
+<span id="cb23-13"><a href="extract-data.html#cb23-13" aria-hidden="true"></a>               <span class="dt">names_to =</span> <span class="st">&quot;class&quot;</span>,</span>
+<span id="cb23-14"><a href="extract-data.html#cb23-14" aria-hidden="true"></a>               <span class="dt">values_to =</span> <span class="st">&quot;land_cover&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb23-15"><a href="extract-data.html#cb23-15" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Percent =</span> land_cover<span class="op">/</span>Total <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</span>
+<span id="cb23-16"><a href="extract-data.html#cb23-16" aria-hidden="true"></a></span>
+<span id="cb23-17"><a href="extract-data.html#cb23-17" aria-hidden="true"></a><span class="co">## create a plot</span></span>
+<span id="cb23-18"><a href="extract-data.html#cb23-18" aria-hidden="true"></a><span class="kw">ggplot</span>(nlcd_summary) <span class="op">+</span></span>
+<span id="cb23-19"><a href="extract-data.html#cb23-19" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="kw">aes</span>(class, Percent)) <span class="op">+</span></span>
+<span id="cb23-20"><a href="extract-data.html#cb23-20" aria-hidden="true"></a><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></span>
+<span id="cb23-21"><a href="extract-data.html#cb23-21" aria-hidden="true"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>ID) <span class="op">+</span></span>
+<span id="cb23-22"><a href="extract-data.html#cb23-22" aria-hidden="true"></a><span class="st">  </span><span class="kw">theme_ipsum_pub</span>(<span class="dt">axis_title_just =</span> <span class="st">&quot;c&quot;</span>,</span>
+<span id="cb23-23"><a href="extract-data.html#cb23-23" aria-hidden="true"></a>                  <span class="dt">plot_margin =</span> <span class="kw">margin</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>),</span>
+<span id="cb23-24"><a href="extract-data.html#cb23-24" aria-hidden="true"></a>                  <span class="dt">ticks =</span> <span class="ot">TRUE</span>) <span class="op">+</span></span>
+<span id="cb23-25"><a href="extract-data.html#cb23-25" aria-hidden="true"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb23-26"><a href="extract-data.html#cb23-26" aria-hidden="true"></a>                                    <span class="dt">fill =</span> <span class="ot">NA</span>,</span>
+<span id="cb23-27"><a href="extract-data.html#cb23-27" aria-hidden="true"></a>                                    <span class="dt">size =</span> <span class="fl">.25</span>))</span></code></pre></div>
+<p><img src="index_files/figure-html/nlcdpercent-1.png" width="100%" /></p>
+<p>Now we have the percentage area of each class by county (although 1 through 4 isn’t informative). Next, calculate the area of the counties and join the county acreage to the nlcd summary table. From there, a little math to calculate the land cover acreage. Area will be calculated using a projected coordinate system, specifically Texas Centric Albers Equal Area, or epsg:6580.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="extract-data.html#cb24-1" aria-hidden="true"></a>counties &lt;-<span class="st"> </span>counties <span class="op">%&gt;%</span></span>
+<span id="cb24-2"><a href="extract-data.html#cb24-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">st_transform</span>(<span class="dv">6580</span>)  <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#project data</span></span>
+<span id="cb24-3"><a href="extract-data.html#cb24-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">area =</span> <span class="kw">st_area</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">## calculates are in units of m2 (projection units)</span></span>
+<span id="cb24-4"><a href="extract-data.html#cb24-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">acres =</span> units<span class="op">::</span><span class="kw">set_units</span>(area, <span class="st">&quot;acres&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">## the units library can deal with some conversions automatically, these units are &quot;sticky&quot;</span></span>
+<span id="cb24-5"><a href="extract-data.html#cb24-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ID =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>)</span>
+<span id="cb24-6"><a href="extract-data.html#cb24-6" aria-hidden="true"></a></span>
+<span id="cb24-7"><a href="extract-data.html#cb24-7" aria-hidden="true"></a><span class="co">## join the county acreage to the nlcd summary</span></span>
+<span id="cb24-8"><a href="extract-data.html#cb24-8" aria-hidden="true"></a>nlcd_summary <span class="op">%&gt;%</span></span>
+<span id="cb24-9"><a href="extract-data.html#cb24-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(<span class="kw">as_tibble</span>(counties) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">## as tibble so we remove the &quot;geometry&quot; which isn&#39;t needed here</span></span>
+<span id="cb24-10"><a href="extract-data.html#cb24-10" aria-hidden="true"></a><span class="st">              </span>dplyr<span class="op">::</span><span class="kw">select</span>(ID, <span class="dt">county_acres =</span> acres, <span class="dt">county =</span> CNTY_NM)) <span class="op">%&gt;%</span></span>
+<span id="cb24-11"><a href="extract-data.html#cb24-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">land_use_acres =</span> county_acres <span class="op">*</span><span class="st"> </span>(Percent<span class="op">/</span><span class="dv">100</span>)) -&gt;<span class="st"> </span>nlcd_summary <span class="co">## note that county acres is put first so that units stick with the result</span></span></code></pre></div>
+<pre><code>## Joining, by = &quot;ID&quot;</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="extract-data.html#cb26-1" aria-hidden="true"></a><span class="kw">ggplot</span>(nlcd_summary) <span class="op">+</span></span>
+<span id="cb26-2"><a href="extract-data.html#cb26-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="kw">aes</span>(class, land_use_acres)) <span class="op">+</span></span>
+<span id="cb26-3"><a href="extract-data.html#cb26-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>county) <span class="op">+</span></span>
+<span id="cb26-4"><a href="extract-data.html#cb26-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></span>
+<span id="cb26-5"><a href="extract-data.html#cb26-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">theme_ipsum_pub</span>(<span class="dt">axis_title_just =</span> <span class="st">&quot;c&quot;</span>,</span>
+<span id="cb26-6"><a href="extract-data.html#cb26-6" aria-hidden="true"></a>                  <span class="dt">plot_margin =</span> <span class="kw">margin</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>),</span>
+<span id="cb26-7"><a href="extract-data.html#cb26-7" aria-hidden="true"></a>                  <span class="dt">ticks =</span> <span class="ot">TRUE</span>) <span class="op">+</span></span>
+<span id="cb26-8"><a href="extract-data.html#cb26-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb26-9"><a href="extract-data.html#cb26-9" aria-hidden="true"></a>                                    <span class="dt">fill =</span> <span class="ot">NA</span>,</span>
+<span id="cb26-10"><a href="extract-data.html#cb26-10" aria-hidden="true"></a>                                    <span class="dt">size =</span> <span class="fl">.25</span>))</span></code></pre></div>
+<p><img src="index_files/figure-html/nlcdacres-1.png" width="100%" /></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="extract-data.html#cb27-1" aria-hidden="true"></a>nlcd_summary <span class="op">%&gt;%</span></span>
+<span id="cb27-2"><a href="extract-data.html#cb27-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">id =</span> class,</span>
+<span id="cb27-3"><a href="extract-data.html#cb27-3" aria-hidden="true"></a>              <span class="dt">names_from =</span> county,</span>
+<span id="cb27-4"><a href="extract-data.html#cb27-4" aria-hidden="true"></a>              <span class="dt">values_from =</span> land_use_acres) <span class="op">%&gt;%</span></span>
+<span id="cb27-5"><a href="extract-data.html#cb27-5" aria-hidden="true"></a><span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>()</span></code></pre></div>
+<table>
+<colgroup>
+<col width="26%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">class</th>
+<th align="right">Matagorda</th>
+<th align="right">Jackson</th>
+<th align="right">Lavaca</th>
+<th align="right">Wharton</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Open Water</td>
+<td align="right">28716.9609 [acres]</td>
+<td align="right">14398.8035 [acres]</td>
+<td align="right">1513.5710 [acres]</td>
+<td align="right">6423.9057 [acres]</td>
+</tr>
+<tr class="even">
+<td align="left">Developed, Open Space</td>
+<td align="right">17418.7151 [acres]</td>
+<td align="right">14558.5364 [acres]</td>
+<td align="right">20352.1965 [acres]</td>
+<td align="right">26833.4555 [acres]</td>
+</tr>
+<tr class="odd">
+<td align="left">Developed, Low Intensity</td>
+<td align="right">7691.2288 [acres]</td>
+<td align="right">3675.7178 [acres]</td>
+<td align="right">3146.8993 [acres]</td>
+<td align="right">6037.6241 [acres]</td>
+</tr>
+<tr class="even">
+<td align="left">Developed, Medium Intensity</td>
+<td align="right">2392.0771 [acres]</td>
+<td align="right">984.9631 [acres]</td>
+<td align="right">874.3623 [acres]</td>
+<td align="right">2031.2559 [acres]</td>
+</tr>
+<tr class="odd">
+<td align="left">Developed, High Intensity</td>
+<td align="right">804.5353 [acres]</td>
+<td align="right">390.1950 [acres]</td>
+<td align="right">297.0450 [acres]</td>
+<td align="right">652.7116 [acres]</td>
+</tr>
+<tr class="even">
+<td align="left">Barren Land</td>
+<td align="right">5448.4976 [acres]</td>
+<td align="right">555.0041 [acres]</td>
+<td align="right">830.5855 [acres]</td>
+<td align="right">819.2934 [acres]</td>
+</tr>
+<tr class="odd">
+<td align="left">Deciduous Forest</td>
+<td align="right">20112.0268 [acres]</td>
+<td align="right">12841.9155 [acres]</td>
+<td align="right">90785.2442 [acres]</td>
+<td align="right">21463.3353 [acres]</td>
+</tr>
+<tr class="even">
+<td align="left">Evergreen Forest</td>
+<td align="right">18211.5536 [acres]</td>
+<td align="right">29236.0265 [acres]</td>
+<td align="right">50003.3613 [acres]</td>
+<td align="right">16869.9805 [acres]</td>
+</tr>
+<tr class="odd">
+<td align="left">Mixed Forest</td>
+<td align="right">21809.7556 [acres]</td>
+<td align="right">26803.6533 [acres]</td>
+<td align="right">36898.3254 [acres]</td>
+<td align="right">12718.7147 [acres]</td>
+</tr>
+<tr class="even">
+<td align="left">Shrub/Scrub</td>
+<td align="right">31598.6077 [acres]</td>
+<td align="right">14793.3979 [acres]</td>
+<td align="right">47752.9643 [acres]</td>
+<td align="right">7331.9531 [acres]</td>
+</tr>
+<tr class="odd">
+<td align="left">Grassland/Herbaceous</td>
+<td align="right">36912.8465 [acres]</td>
+<td align="right">2494.9804 [acres]</td>
+<td align="right">3762.6262 [acres]</td>
+<td align="right">2202.8806 [acres]</td>
+</tr>
+<tr class="even">
+<td align="left">Pasture/Hay</td>
+<td align="right">216458.9894 [acres]</td>
+<td align="right">228373.1969 [acres]</td>
+<td align="right">322229.2731 [acres]</td>
+<td align="right">184387.0714 [acres]</td>
+</tr>
+<tr class="odd">
+<td align="left">Cultivated Crops</td>
+<td align="right">175937.0917 [acres]</td>
+<td align="right">164817.9492 [acres]</td>
+<td align="right">20343.8101 [acres]</td>
+<td align="right">384078.6576 [acres]</td>
+</tr>
+<tr class="even">
+<td align="left">Woody Wetlands</td>
+<td align="right">37341.3896 [acres]</td>
+<td align="right">14087.6290 [acres]</td>
+<td align="right">19181.9632 [acres]</td>
+<td align="right">25077.2025 [acres]</td>
+</tr>
+<tr class="odd">
+<td align="left">Emergent Herbaceous Wetlands</td>
+<td align="right">106236.1254 [acres]</td>
+<td align="right">14739.4204 [acres]</td>
+<td align="right">1527.6601 [acres]</td>
+<td align="right">1311.8108 [acres]</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<center>
+  <div class="footer">
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a><br />Text and figures are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a> unless otherwise indicated.
+  </div>
+</center>
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="load-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/mps9506/twri-bookdown-template/edit/main/index.Rmd",
+"text": "Suggest an edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["https://github.com/mps9506/twri-bookdown-template/raw/main/index.Rmd"],
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
